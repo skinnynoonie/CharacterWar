@@ -1,6 +1,7 @@
 package me.skinnynoonie.characterwar;
 
 import me.skinnynoonie.characterwar.character.CharacterManager;
+import me.skinnynoonie.characterwar.character.impls.BatmanCharacter;
 import me.skinnynoonie.characterwar.character.impls.SupermanCharacter;
 import me.skinnynoonie.characterwar.commands.GiveCharacterCMD;
 import me.skinnynoonie.characterwar.listeners.PlayerConnectionListener;
@@ -9,12 +10,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class CharacterWar extends JavaPlugin {
 
-    private CharacterManager characterManager;
-
     @Override
     public void onEnable() {
-        characterManager = new CharacterManager(this);
+        CharacterManager characterManager = new CharacterManager(this);
         characterManager.registerCharacter(new SupermanCharacter(this));
+        characterManager.registerCharacter(new BatmanCharacter());
 
         getServer().getPluginManager().registerEvents(new PlayerConnectionListener(), this);
 

@@ -1,51 +1,48 @@
 package me.skinnynoonie.characterwar.cooldown;
 
-import com.google.common.collect.ImmutableList;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 public class CooldownManager {
 
-    private static final List<CooldownManager> cooldownManagers = new ArrayList<>();
+    private static CooldownManager instance;
 
-    public static CooldownManager create() {
-        CooldownManager cooldownManager = new CooldownManager();
-        cooldownManagers.add(cooldownManager);
-        return cooldownManager;
-    }
-
-    public static List<CooldownManager> getCooldownManagers() {
-        return Collections.unmodifiableList(cooldownManagers);
-    }
-
-    public static void removeUuidFromAllManagers(UUID uuid) {
-        for (CooldownManager cooldownManager : cooldownManagers) {
-            cooldownManager.cooldowns.remove(uuid);
+    public static CooldownManager getInstance() {
+        if (instance == null) {
+            instance = new CooldownManager();
+            return instance;
         }
+        return instance;
     }
 
-    private final Map<UUID, DefaultExpiredCooldownTimer> cooldowns = new HashMap<>();
+    public static void clearUUID(UUID uuid) {
+        instance.cooldowns.remove(uuid);
+    }
+
+    private final Map<UUID, Map<String, DefaultExpiredCooldownTimer>> cooldowns = new HashMap<>();
 
     private CooldownManager() {
     }
 
-    public boolean cooldownExpired(UUID uuid) {
-        cooldowns.putIfAbsent(uuid, new DefaultExpiredCooldownTimer());
-        return cooldowns.get(uuid).expired();
+    public boolean cooldownExpired(UUID uuid, String key) {
+        if (cooldowns.get(uuid) == null) {
+            return true;
+        }
+        if (cooldowns.get(uuid).get(key) == null) {
+            return false;
+        }
+        return cooldowns.get(uuid).get(key).expired();
     }
 
-    public boolean isOnCooldown(UUID uuid) {
-        return !cooldownExpired(uuid);
+    public boolean isOnCooldown(UUID uuid, String key) {
+        return !cooldownExpired(uuid, key);
     }
 
-    public void startCooldown(UUID uuid, long millis) {
-        cooldowns.putIfAbsent(uuid, new DefaultExpiredCooldownTimer());
-        cooldowns.get(uuid).start(millis);
+    public void startCooldown(UUID uuid, String key, long millis) {
+        cooldowns.putIfAbsent(uuid, new HashMap<>());
+        cooldowns.get(uuid).putIfAbsent(key, new DefaultExpiredCooldownTimer());
+        cooldowns.get(uuid).get(key).start(millis);
     }
 
 }

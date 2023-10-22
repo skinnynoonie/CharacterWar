@@ -1,19 +1,20 @@
 package me.skinnynoonie.characterwar.character;
 
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public interface Character {
 
-    String getReferenceName();
+    @NotNull String getReferenceName();
 
-    String getDisplayName();
+    @NotNull String getDisplayName();
 
-    String getDescription();
+    @NotNull String getDescription();
 
-    CharacterVerse getVerse();
+    @NotNull CharacterVerse getVerse();
 
-    ItemStack[] getArmor();
+    @NotNull ItemStack[] getArmor();
 
-    ItemStack[] getCustomItems();
+    @NotNull ItemStack[] getCustomItems();
 
 }

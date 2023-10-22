@@ -12,7 +12,7 @@ public class PlayerConnectionListener implements Listener {
     @EventHandler
     public void onPlayerLeave(PlayerQuitEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
-        CooldownManager.removeUuidFromAllManagers(uuid);
+        CooldownManager.clearUUID(uuid);
     }
 
 }
