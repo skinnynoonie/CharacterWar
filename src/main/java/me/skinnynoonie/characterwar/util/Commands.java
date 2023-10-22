@@ -2,7 +2,6 @@ package me.skinnynoonie.characterwar.util;
 
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class Commands {
