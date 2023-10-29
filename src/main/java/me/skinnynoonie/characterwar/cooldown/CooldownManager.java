@@ -16,10 +16,6 @@ public class CooldownManager {
         return instance;
     }
 
-    public static void clearUUID(UUID uuid) {
-        instance.cooldowns.remove(uuid);
-    }
-
     private final Map<UUID, Map<String, DefaultExpiredCooldownTimer>> cooldowns = new HashMap<>();
 
     private CooldownManager() {
@@ -43,6 +39,10 @@ public class CooldownManager {
         cooldowns.putIfAbsent(uuid, new HashMap<>());
         cooldowns.get(uuid).putIfAbsent(key, new DefaultExpiredCooldownTimer());
         cooldowns.get(uuid).get(key).start(millis);
+    }
+
+    public void clearUUID(UUID uuid) {
+        cooldowns.remove(uuid);
     }
 
 }

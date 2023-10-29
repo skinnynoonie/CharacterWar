@@ -6,10 +6,12 @@ import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class ItemBuilder {
@@ -25,26 +27,31 @@ public class ItemBuilder {
         this(new ItemStack(itemToBuild));
     }
 
+    public ItemBuilder editMeta(Consumer<ItemMeta> meta) {
+        return editMeta(ItemMeta.class, meta);
+    }
+
+    public <M extends ItemMeta> ItemBuilder editMeta(Class<M> metaType, Consumer<M> meta) {
+        itemToBuild.editMeta(metaType, meta);
+        return this;
+    }
+
     public ItemBuilder setName(String name) {
         Component componentText = mm.deserialize(name);
-        itemToBuild.editMeta(meta -> meta.displayName(componentText));
-        return this;
+        return editMeta(meta -> meta.displayName(componentText));
     }
 
     public ItemBuilder setLore(String... strings) {
         List<Component> components = Arrays.stream(strings).map(mm::deserialize).collect(Collectors.toList());
-        itemToBuild.editMeta(meta -> meta.lore(components));
-        return this;
+        return editMeta(meta -> meta.lore(components));
     }
 
     public ItemBuilder setUnbreakable(boolean unbreakable) {
-        itemToBuild.editMeta(meta -> meta.setUnbreakable(unbreakable));
-        return this;
+        return editMeta(meta -> meta.setUnbreakable(unbreakable));
     }
 
     public ItemBuilder setDurability(short durability) {
-        itemToBuild.editMeta(Damageable.class, meta -> meta.setDamage(durability));
-        return this;
+        return editMeta(Damageable.class, meta -> meta.setDamage(durability));
     }
 
     /**
@@ -58,8 +65,7 @@ public class ItemBuilder {
     }
 
     public ItemBuilder setColor(Color color) {
-        itemToBuild.editMeta(LeatherArmorMeta.class, (meta) -> meta.setColor(color));
-        return this;
+        return editMeta(LeatherArmorMeta.class, (meta) -> meta.setColor(color));
     }
 
     public ItemStack build() {

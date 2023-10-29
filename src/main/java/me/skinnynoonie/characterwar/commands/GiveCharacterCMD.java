@@ -3,6 +3,7 @@ package me.skinnynoonie.characterwar.commands;
 import me.skinnynoonie.characterwar.character.Character;
 import me.skinnynoonie.characterwar.character.CharacterManager;
 import me.skinnynoonie.characterwar.constants.MessageConstants;
+import me.skinnynoonie.characterwar.item.CustomItemImpl;
 import me.skinnynoonie.characterwar.util.Messages;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.Command;
@@ -10,6 +11,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -45,8 +47,12 @@ public class GiveCharacterCMD implements CommandExecutor, TabCompleter {
         }
 
         Character character = characterManager.getCharacterByReferenceName(args[0]);
-        player.getInventory().addItem(character.getCustomItems());
-        player.getInventory().addItem(character.getArmor());
+        ItemStack[] customItems = character.getItems().toArray(ItemStack[]::new);
+        player.getInventory().addItem(customItems);
+        player.getInventory().addItem(character.getHelmet());
+        player.getInventory().addItem(character.getChestplate());
+        player.getInventory().addItem(character.getLeggings());
+        player.getInventory().addItem(character.getBoots());
 
         player.sendMessage(SUCCESSFULLY_RECEIVED);
 
