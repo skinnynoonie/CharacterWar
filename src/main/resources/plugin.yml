@@ -1,0 +1,7 @@
+name: CharacterWar
+version: '${project.version}'
+main: me.skinnynoonie.characterwar.CharacterWar
+api-version: '1.20'
+load: STARTUP
+commands:
+  givecharacter:
