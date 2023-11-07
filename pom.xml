@@ -18,7 +18,7 @@
 
     <build>
         <plugins>
-            <!--
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -27,7 +27,7 @@
                     <outputDirectory>C:\Users\skinn\Desktop\MC Servers\CharacterWar\plugins\</outputDirectory>
                 </configuration>
             </plugin>
-            -->
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

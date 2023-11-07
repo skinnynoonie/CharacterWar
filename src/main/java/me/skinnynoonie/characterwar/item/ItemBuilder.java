@@ -4,54 +4,60 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Color;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
+import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class ItemBuilder {
 
     private final ItemStack itemToBuild;
-    private final MiniMessage mm = MiniMessage.miniMessage();
+    private final MiniMessage mm;
 
-    public ItemBuilder(ItemStack itemToBuild) {
+    public ItemBuilder(@NotNull ItemStack itemToBuild) {
+        Objects.requireNonNull(itemToBuild, "Parameter itemToBuild is null.");
         this.itemToBuild = itemToBuild;
+        this.mm = MiniMessage.miniMessage();
     }
 
-    public ItemBuilder(Material itemToBuild) {
+    public ItemBuilder(@NotNull Material itemToBuild) {
         this(new ItemStack(itemToBuild));
     }
 
     public ItemBuilder editMeta(Consumer<ItemMeta> meta) {
-        return editMeta(ItemMeta.class, meta);
+        return this.editMeta(ItemMeta.class, meta);
     }
 
     public <M extends ItemMeta> ItemBuilder editMeta(Class<M> metaType, Consumer<M> meta) {
-        itemToBuild.editMeta(metaType, meta);
+        this.itemToBuild.editMeta(metaType, meta);
         return this;
     }
 
     public ItemBuilder setName(String name) {
-        Component componentText = mm.deserialize(name);
-        return editMeta(meta -> meta.displayName(componentText));
+        Component componentText = this.mm.deserialize(name);
+        return this.editMeta(meta -> meta.displayName(componentText));
     }
 
     public ItemBuilder setLore(String... strings) {
-        List<Component> components = Arrays.stream(strings).map(mm::deserialize).collect(Collectors.toList());
-        return editMeta(meta -> meta.lore(components));
+        List<Component> components = Arrays.stream(strings).map(this.mm::deserialize).collect(Collectors.toList());
+        return this.editMeta(meta -> meta.lore(components));
     }
 
     public ItemBuilder setUnbreakable(boolean unbreakable) {
-        return editMeta(meta -> meta.setUnbreakable(unbreakable));
+        return this.editMeta(meta -> meta.setUnbreakable(unbreakable));
     }
 
     public ItemBuilder setDurability(short durability) {
-        return editMeta(Damageable.class, meta -> meta.setDamage(durability));
+        return this.editMeta(Damageable.class, meta -> meta.setDamage(durability));
     }
 
     /**
@@ -60,16 +66,20 @@ public class ItemBuilder {
      */
     public ItemBuilder setDurabilityPercentage(double percentage) {
         double percentageFixed = Math.min(1, Math.max(0, percentage));
-        short durabilityFromPercentage = (short) (itemToBuild.getType().getMaxDurability() * percentage);
-        return setDurability(durabilityFromPercentage);
+        short durabilityFromPercentage = (short) (this.itemToBuild.getType().getMaxDurability() * percentage);
+        return this.setDurability(durabilityFromPercentage);
     }
 
     public ItemBuilder setColor(Color color) {
-        return editMeta(LeatherArmorMeta.class, (meta) -> meta.setColor(color));
+        return this.editMeta(LeatherArmorMeta.class, (meta) -> meta.setColor(color));
+    }
+
+    public <T, V> ItemBuilder setPDCValue(NamespacedKey key, PersistentDataType<T, V> type, V value) {
+        return this.editMeta(meta -> meta.getPersistentDataContainer().set(key, type, value));
     }
 
     public ItemStack build() {
-        return itemToBuild;
+        return this.itemToBuild.clone();
     }
 
 }

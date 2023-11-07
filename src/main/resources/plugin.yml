@@ -1,6 +1,6 @@
-name: CharacterWar
+name: CharacterWarPlugin
 version: '${project.version}'
-main: me.skinnynoonie.characterwar.CharacterWar
+main: me.skinnynoonie.characterwar.CharacterWarPlugin
 api-version: '1.20'
 load: STARTUP
 commands:

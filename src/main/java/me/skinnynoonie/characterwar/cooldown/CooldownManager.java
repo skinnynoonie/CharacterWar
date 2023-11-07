@@ -1,48 +1,58 @@
 package me.skinnynoonie.characterwar.cooldown;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class CooldownManager {
 
-    private static CooldownManager instance;
-
-    public static CooldownManager getInstance() {
-        if (instance == null) {
-            instance = new CooldownManager();
-            return instance;
-        }
-        return instance;
+    private static final class InstanceHolder {
+        private static final CooldownManager instance = new CooldownManager();
     }
 
-    private final Map<UUID, Map<String, DefaultExpiredCooldownTimer>> cooldowns = new HashMap<>();
+    @NotNull
+    public static CooldownManager getInstance() {
+        return InstanceHolder.instance;
+    }
+
+    private final Map<UUID, Map<String, DefaultExpiredCooldownTimer>> uuidToKeyTimers;
 
     private CooldownManager() {
+        this.uuidToKeyTimers = new HashMap<>();
     }
 
-    public boolean cooldownExpired(UUID uuid, String key) {
-        if (cooldowns.get(uuid) == null) {
+    public boolean cooldownExpired(@NotNull UUID uuid, @NotNull String key) {
+        Objects.requireNonNull(uuid, "Parameter uuid is null.");
+        Objects.requireNonNull(key, "Parameter key is null.");
+        Map<String, DefaultExpiredCooldownTimer> keyToTimerCache = this.uuidToKeyTimers.get(uuid);
+        if (keyToTimerCache == null) {
             return true;
         }
-        if (cooldowns.get(uuid).get(key) == null) {
+        DefaultExpiredCooldownTimer timer = keyToTimerCache.get(key);
+        if (timer == null) {
             return false;
         }
-        return cooldowns.get(uuid).get(key).expired();
+        return timer.expired();
     }
 
-    public boolean isOnCooldown(UUID uuid, String key) {
-        return !cooldownExpired(uuid, key);
+    public boolean isOnCooldown(@NotNull UUID uuid, @NotNull String key) {
+        return !this.cooldownExpired(uuid, key);
     }
 
-    public void startCooldown(UUID uuid, String key, long millis) {
-        cooldowns.putIfAbsent(uuid, new HashMap<>());
-        cooldowns.get(uuid).putIfAbsent(key, new DefaultExpiredCooldownTimer());
-        cooldowns.get(uuid).get(key).start(millis);
+    public void startCooldown(@NotNull UUID uuid, @NotNull String key, long millis) {
+        Objects.requireNonNull(uuid, "Parameter uuid is null.");
+        Objects.requireNonNull(key, "Parameter key is null.");
+        this.uuidToKeyTimers.putIfAbsent(uuid, new HashMap<>());
+        this.uuidToKeyTimers.get(uuid).putIfAbsent(key, new DefaultExpiredCooldownTimer());
+        this.uuidToKeyTimers.get(uuid).get(key).start(millis);
     }
 
-    public void clearUUID(UUID uuid) {
-        cooldowns.remove(uuid);
+    public void clearUUID(@NotNull UUID uuid) {
+        Objects.requireNonNull(uuid, "Parameter uuid is null.");
+        this.uuidToKeyTimers.remove(uuid);
     }
 
 }
