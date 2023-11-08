@@ -1,10 +1,11 @@
 package me.skinnynoonie.characterwar.item;
 
 import org.bukkit.Material;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public interface CustomItem extends CustomItemListener {
+public interface CustomItem extends Listener {
 
     CustomItem AIR = new CustomItem() {
         @Override

@@ -8,4 +8,6 @@ public interface CustomCharacterInformation {
 
     @NotNull String getDisplayName();
 
+    @NotNull CharacterVerse getVerse();
+
 }

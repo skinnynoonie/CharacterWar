@@ -3,7 +3,7 @@ package me.skinnynoonie.characterwar.item;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
 
-public class CustomItemKey {
+public final class CustomItemKey {
 
     private static NamespacedKey key;
 

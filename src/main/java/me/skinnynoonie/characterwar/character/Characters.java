@@ -20,6 +20,7 @@ public class Characters {
                         new CustomCharacterInformationImpl.Builder()
                                 .setDisplayName("Noonie")
                                 .setReferenceName("noonie")
+                                .setVerse(CharacterVerse.DC)
                                 .build()
                 )
                 .setArmorEquipment(
