@@ -1,7 +1,7 @@
 package me.skinnynoonie.characterwar.command;
 
 import me.skinnynoonie.characterwar.character.CustomCharacter;
-import me.skinnynoonie.characterwar.item.ArmorEquipment;
+import me.skinnynoonie.characterwar.item.armor.ArmorEquipment;
 import me.skinnynoonie.characterwar.item.CustomItem;
 import me.skinnynoonie.characterwar.repository.CustomCharacterRepository;
 import org.bukkit.command.Command;

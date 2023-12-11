@@ -1,6 +1,6 @@
 package me.skinnynoonie.characterwar;
 
-import me.skinnynoonie.characterwar.character.Characters;
+import me.skinnynoonie.characterwar.characters.Characters;
 import me.skinnynoonie.characterwar.command.GiveCharacterCommand;
 import me.skinnynoonie.characterwar.item.CustomItemKey;
 import me.skinnynoonie.characterwar.listener.DamageListener;

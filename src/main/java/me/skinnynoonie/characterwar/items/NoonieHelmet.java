@@ -1,4 +1,4 @@
-package me.skinnynoonie.characterwar.item.items;
+package me.skinnynoonie.characterwar.items;
 
 import me.skinnynoonie.characterwar.event.CustomItemEquippedEntityDamageEvent;
 import me.skinnynoonie.characterwar.item.CustomItem;

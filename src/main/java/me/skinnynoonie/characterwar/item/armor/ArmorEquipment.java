@@ -1,4 +1,4 @@
-package me.skinnynoonie.characterwar.item;
+package me.skinnynoonie.characterwar.item.armor;
 
 import org.jetbrains.annotations.NotNull;
 

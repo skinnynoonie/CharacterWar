@@ -1,7 +1,6 @@
 package me.skinnynoonie.characterwar.repository;
 
 import me.skinnynoonie.characterwar.item.CustomItem;
-import me.skinnynoonie.characterwar.item.CustomItemKey;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,6 +21,7 @@ public interface CustomItemRepository {
 
     @Nullable CustomItem fromReferenceName(@NotNull String referenceName);
 
+    @SuppressWarnings("ConstantConditions")
     default void registerAll(@NotNull List<@NotNull CustomItem> customItems) {
         Objects.requireNonNull(customItems, "Parameter customItems is null.");
         if (customItems.stream().anyMatch(Objects::isNull)) {

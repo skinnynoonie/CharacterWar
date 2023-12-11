@@ -1,7 +1,10 @@
-package me.skinnynoonie.characterwar.character;
+package me.skinnynoonie.characterwar.characters;
 
-import me.skinnynoonie.characterwar.item.CustomArmorEquipment;
-import me.skinnynoonie.characterwar.item.items.NoonieHelmet;
+import me.skinnynoonie.characterwar.character.CharacterVerse;
+import me.skinnynoonie.characterwar.character.CustomCharacter;
+import me.skinnynoonie.characterwar.character.CustomCharacterInformation;
+import me.skinnynoonie.characterwar.item.armor.CustomArmorEquipment;
+import me.skinnynoonie.characterwar.items.NoonieHelmet;
 
 import java.util.Collections;
 
@@ -14,10 +17,10 @@ public class Characters {
     }
 
     public static CustomCharacter createNoonie() {
-        return new CustomCharacterImpl.Builder()
+        return new CustomCharacter.Builder()
                 .setOtherItems(Collections.emptyList())
                 .setCustomCharacterInformation(
-                        new CustomCharacterInformationImpl.Builder()
+                        new CustomCharacterInformation.Builder()
                                 .setDisplayName("Noonie")
                                 .setReferenceName("noonie")
                                 .setVerse(CharacterVerse.DC)

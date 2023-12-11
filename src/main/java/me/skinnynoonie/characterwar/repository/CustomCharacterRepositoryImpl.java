@@ -1,7 +1,7 @@
 package me.skinnynoonie.characterwar.repository;
 
 import me.skinnynoonie.characterwar.character.CustomCharacter;
-import me.skinnynoonie.characterwar.item.ArmorEquipment;
+import me.skinnynoonie.characterwar.item.armor.ArmorEquipment;
 import me.skinnynoonie.characterwar.item.CustomItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

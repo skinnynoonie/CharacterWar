@@ -1,5 +1,6 @@
-package me.skinnynoonie.characterwar.item;
+package me.skinnynoonie.characterwar.item.armor;
 
+import me.skinnynoonie.characterwar.item.CustomItem;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
