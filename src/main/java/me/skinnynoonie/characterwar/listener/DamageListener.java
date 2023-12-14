@@ -1,6 +1,7 @@
 package me.skinnynoonie.characterwar.listener;
 
 import me.skinnynoonie.characterwar.eventinfo.DamageEventInfo;
+import me.skinnynoonie.characterwar.item.CustomItem;
 import me.skinnynoonie.characterwar.item.CustomItemKey;
 import me.skinnynoonie.characterwar.repository.CustomItemRepository;
 import me.skinnynoonie.characterwar.util.ItemUtils;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class DamageListener implements Listener {
 
@@ -30,15 +32,10 @@ public class DamageListener implements Listener {
         if (!(event.getEntity() instanceof Player victim)) {
             return;
         }
-
-        ItemStack[] armor = victim.getInventory().getArmorContents();
-        for (ItemStack armorPiece : armor) {
-            String referenceName = ItemUtils.getStringFromPDC(armorPiece, CustomItemKey.key());
-            if (referenceName == null) {
-                continue;
-            }
-            this.customItemRepository.fromReferenceName(referenceName).onDamagedWhileWearing(event);
-        }
+        this.handleItemStacks(customItem -> customItem.onDamagedWhileWearing(event),
+                victim.getInventory().getArmorContents());
+        this.handleItemStacks(customItem -> customItem.onDamagedWhileHolding(event),
+                victim.getInventory().getItemInMainHand());
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
@@ -47,32 +44,50 @@ public class DamageListener implements Listener {
             return;
         }
 
-        Player attacker = null;
-        boolean shooter = false;
-        if (event.getDamager() instanceof Player) {
-            attacker = (Player) event.getDamager();
-        } else if (event.getDamager() instanceof Projectile projectile) {
-            if (projectile.getShooter() instanceof Player) {
-                attacker = (Player) projectile.getShooter();
-                shooter = true;
+        Player attacker;
+        boolean attackerIsShooter = false;
+        if (event.getDamager() instanceof Player attackerPlayer) {
+            attacker = attackerPlayer;
+        } else {
+            attacker = this.getShooterFromEvent(event);
+            if (attacker == null) {
+                return;
             }
+            attackerIsShooter = true;
         }
 
-        if (attacker == null) {
-            return;
-        }
+        DamageEventInfo damageEventInfo = new DamageEventInfo(attacker, victim, attackerIsShooter);
+        this.handleItemStacks(customItem -> customItem.onDamagedByPlayerWhileWearing(event, damageEventInfo),
+                victim.getInventory().getArmorContents());
+        this.handleItemStacks(customItem -> customItem.onDamagedByPlayerWhileHolding(event, damageEventInfo),
+                victim.getInventory().getItemInMainHand());
 
-        DamageEventInfo damageEventInfo = new DamageEventInfo(attacker, shooter);
+        this.handleItemStacks(customItem -> customItem.onAttackPlayerWhileWearing(event, damageEventInfo),
+                attacker.getInventory().getArmorContents());
+        this.handleItemStacks(customItem -> customItem.onAttackPlayerWhileHolding(event, damageEventInfo),
+                attacker.getInventory().getItemInMainHand());
+    }
 
-        ItemStack[] armor = victim.getInventory().getArmorContents();
-        for (ItemStack armorPiece : armor) {
+    private void handleItemStacks(Consumer<CustomItem> consumer, ItemStack... items) {
+        for (ItemStack armorPiece : items) {
             String referenceName = ItemUtils.getStringFromPDC(armorPiece, CustomItemKey.key());
             if (referenceName == null) {
                 continue;
             }
-            this.customItemRepository.fromReferenceName(referenceName).onDamagedByPlayerWhileWearing(event, damageEventInfo);
+            CustomItem customItem = this.customItemRepository.fromReferenceName(referenceName);
+            if (customItem == null) {
+                continue;
+            }
+            consumer.accept(customItem);
         }
+    }
 
+    private Player getShooterFromEvent(EntityDamageByEntityEvent event) {
+        if (event.getDamager() instanceof Projectile projectile
+                && projectile.getShooter() instanceof Player shooter) {
+            return shooter;
+        }
+        return null;
     }
 
 }
