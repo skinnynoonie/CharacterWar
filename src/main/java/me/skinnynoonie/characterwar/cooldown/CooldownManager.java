@@ -18,7 +18,7 @@ public class CooldownManager {
         return InstanceHolder.instance;
     }
 
-    private final Map<UUID, Map<String, DefaultExpiredCooldownTimer>> uuidToKeyTimers;
+    private final Map<UUID, Map<String, CooldownTimer>> uuidToKeyTimers;
 
     private CooldownManager() {
         this.uuidToKeyTimers = new HashMap<>();
@@ -27,11 +27,11 @@ public class CooldownManager {
     public boolean cooldownExpired(@NotNull UUID uuid, @NotNull String key) {
         Objects.requireNonNull(uuid, "Parameter uuid is null.");
         Objects.requireNonNull(key, "Parameter key is null.");
-        Map<String, DefaultExpiredCooldownTimer> keyToTimerCache = this.uuidToKeyTimers.get(uuid);
+        Map<String, CooldownTimer> keyToTimerCache = this.uuidToKeyTimers.get(uuid);
         if (keyToTimerCache == null) {
             return true;
         }
-        DefaultExpiredCooldownTimer timer = keyToTimerCache.get(key);
+        CooldownTimer timer = keyToTimerCache.get(key);
         if (timer == null) {
             return false;
         }

@@ -1,11 +1,12 @@
 package me.skinnynoonie.characterwar.items;
 
-import me.skinnynoonie.characterwar.event.CustomItemEquippedEntityDamageEvent;
+import me.skinnynoonie.characterwar.eventinfo.DamageEventInfo;
 import me.skinnynoonie.characterwar.item.CustomItem;
 import me.skinnynoonie.characterwar.item.CustomItemKey;
 import me.skinnynoonie.characterwar.item.ItemBuilder;
 import org.bukkit.Material;
-import org.bukkit.event.EventHandler;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
@@ -21,12 +22,14 @@ public class NoonieHelmet implements CustomItem {
                 .build();
     }
 
-    @EventHandler
-    public void onDamage(CustomItemEquippedEntityDamageEvent event) {
-        if (!event.getReferenceNames().contains("noonie")) {
-            return;
-        }
-        event.getEntityDamageEvent().setDamage(0);
+    @Override
+    public void onDamagedWhileWearing(EntityDamageEvent event) {
+        event.setDamage(event.getDamage() * 0.10);
+    }
+
+    @Override
+    public void onDamagedByPlayerWhileWearing(EntityDamageByEntityEvent event, DamageEventInfo info) {
+        info.attacker().damage(5, event.getEntity());
     }
 
 }

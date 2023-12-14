@@ -1,6 +1,6 @@
 package me.skinnynoonie.characterwar.cooldown;
 
-public class DefaultExpiredCooldownTimer {
+public class DefaultExpiredCooldownTimer implements CooldownTimer {
 
     private long timeExpires;
 
@@ -8,10 +8,12 @@ public class DefaultExpiredCooldownTimer {
         this.timeExpires = 0;
     }
 
+    @Override
     public boolean expired() {
         return System.currentTimeMillis() > this.timeExpires;
     }
 
+    @Override
     public void start(long millis) {
         this.timeExpires = System.currentTimeMillis() + millis;
     }

@@ -4,7 +4,6 @@ import me.skinnynoonie.characterwar.characters.Characters;
 import me.skinnynoonie.characterwar.command.GiveCharacterCommand;
 import me.skinnynoonie.characterwar.item.CustomItemKey;
 import me.skinnynoonie.characterwar.listener.DamageListener;
-import me.skinnynoonie.characterwar.listener.PlayerInteractListener;
 import me.skinnynoonie.characterwar.repository.CustomCharacterRepository;
 import me.skinnynoonie.characterwar.repository.CustomCharacterRepositoryImpl;
 import me.skinnynoonie.characterwar.repository.CustomItemRepository;
@@ -53,7 +52,6 @@ public final class CharacterWarPlugin extends JavaPlugin {
 
     private void registerEventListeners() {
         PluginManager pluginManager = super.getServer().getPluginManager();
-        pluginManager.registerEvents(new PlayerInteractListener(this.itemRepository), this);
         pluginManager.registerEvents(new DamageListener(this.itemRepository), this);
     }
 

@@ -5,7 +5,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-public interface CustomItem extends Listener {
+public interface CustomItem extends CustomItemListener {
 
     CustomItem AIR = new CustomItem() {
         @Override
