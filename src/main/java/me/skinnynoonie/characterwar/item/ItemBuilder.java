@@ -1,6 +1,7 @@
 package me.skinnynoonie.characterwar.item;
 
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Color;
 import org.bukkit.Material;
@@ -48,7 +49,10 @@ public class ItemBuilder {
     }
 
     public ItemBuilder setLore(String... strings) {
-        List<Component> components = Arrays.stream(strings).map(this.mm::deserialize).collect(Collectors.toList());
+        List<Component> components = Arrays.stream(strings)
+                .map(this.mm::deserialize)
+                .map(c -> c.decoration(TextDecoration.ITALIC, false))
+                .collect(Collectors.toList());
         return this.editMeta(meta -> meta.lore(components));
     }
 

@@ -16,5 +16,4 @@ public interface CustomItemListener extends Listener {
     default void onAttackPlayerWhileWearing(EntityDamageByEntityEvent event, DamageEventInfo info) {}
     default void onAttackPlayerWhileHolding(EntityDamageByEntityEvent event, DamageEventInfo info) {}
 
-
 }

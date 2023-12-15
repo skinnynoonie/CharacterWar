@@ -1,6 +1,7 @@
 package me.skinnynoonie.characterwar;
 
 import me.skinnynoonie.characterwar.characters.Characters;
+import me.skinnynoonie.characterwar.characters.FlashCharacter;
 import me.skinnynoonie.characterwar.command.GiveCharacterCommand;
 import me.skinnynoonie.characterwar.item.CustomItemKey;
 import me.skinnynoonie.characterwar.listener.DamageListener;
@@ -48,6 +49,7 @@ public final class CharacterWarPlugin extends JavaPlugin {
         this.itemRepository = new CustomItemRepositoryImpl(this);
         this.characterRepository = new CustomCharacterRepositoryImpl(this.itemRepository);
         this.characterRepository.register(Characters.createNoonie());
+        this.characterRepository.register(new FlashCharacter());
     }
 
     private void registerEventListeners() {
