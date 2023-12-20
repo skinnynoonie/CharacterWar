@@ -9,9 +9,7 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class CustomItemRepositoryImpl implements CustomItemRepository {
 
@@ -45,6 +43,11 @@ public class CustomItemRepositoryImpl implements CustomItemRepository {
     public @Nullable CustomItem fromReferenceName(@NotNull String referenceName) {
         Objects.requireNonNull(referenceName, "Parameter referenceName is null!");
         return this.referenceNameToCustomItem.get(referenceName);
+    }
+
+    @Override
+    public @NotNull List<@NotNull CustomItem> getAllRegistered() {
+        return new ArrayList<>(this.referenceNameToCustomItem.values());
     }
 
 }

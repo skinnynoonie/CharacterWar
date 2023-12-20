@@ -1,5 +1,6 @@
 package me.skinnynoonie.characterwar.item;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
 
@@ -8,6 +9,7 @@ public final class CustomItemKey {
     private static NamespacedKey key;
 
     public static void setKey(@NotNull NamespacedKey key) {
+        Preconditions.checkNotNull(key, "Parameter key is null.");
         if (CustomItemKey.key != null) {
             throw new IllegalStateException("Cannot set the key when the key is already set.");
         }

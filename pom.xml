@@ -80,6 +80,11 @@
             <version>1.20.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>me.skinnynoonie.bukkit.locationutils</groupId>
+            <artifactId>bukkit-location-utils</artifactId>
+            <version>1.0</version>
+        </dependency>
     </dependencies>
 
 </project>

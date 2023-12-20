@@ -44,7 +44,7 @@ public class ItemBuilder {
     }
 
     public ItemBuilder setName(String name) {
-        Component componentText = this.mm.deserialize(name);
+        Component componentText = this.mm.deserialize(name).decoration(TextDecoration.ITALIC, false);
         return this.editMeta(meta -> meta.displayName(componentText));
     }
 

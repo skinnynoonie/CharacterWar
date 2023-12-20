@@ -21,6 +21,8 @@ public interface CustomItemRepository {
 
     @Nullable CustomItem fromReferenceName(@NotNull String referenceName);
 
+    @NotNull List<@NotNull CustomItem> getAllRegistered();
+
     @SuppressWarnings("ConstantConditions")
     default void registerAll(@NotNull List<@NotNull CustomItem> customItems) {
         Objects.requireNonNull(customItems, "Parameter customItems is null.");

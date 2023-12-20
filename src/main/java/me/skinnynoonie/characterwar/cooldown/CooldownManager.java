@@ -33,9 +33,13 @@ public class CooldownManager {
         }
         CooldownTimer timer = keyToTimerCache.get(key);
         if (timer == null) {
-            return false;
+            return true;
         }
-        return timer.expired();
+        if (timer.expired()) {
+            keyToTimerCache.remove(key);
+            return true;
+        }
+        return false;
     }
 
     public boolean isOnCooldown(@NotNull UUID uuid, @NotNull String key) {

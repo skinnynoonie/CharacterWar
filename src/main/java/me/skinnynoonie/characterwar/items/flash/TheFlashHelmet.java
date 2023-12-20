@@ -1,18 +1,19 @@
 package me.skinnynoonie.characterwar.items.flash;
 
-import com.destroystokyo.paper.ParticleBuilder;
 import me.skinnynoonie.characterwar.CharacterWarPlugin;
 import me.skinnynoonie.characterwar.cooldown.CooldownManager;
 import me.skinnynoonie.characterwar.eventinfo.DamageEventInfo;
 import me.skinnynoonie.characterwar.item.CustomItem;
-import me.skinnynoonie.characterwar.item.CustomItemKey;
-import me.skinnynoonie.characterwar.item.ItemBuilder;
-import org.bukkit.*;
+import me.skinnynoonie.characterwar.item.CustomItemBuilder;
+import org.bukkit.Bukkit;
+import org.bukkit.Color;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataType;
-import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,13 +21,11 @@ public class TheFlashHelmet implements CustomItem {
 
     @Override
     public @NotNull ItemStack getItem() {
-        return new ItemBuilder(Material.LEATHER_HELMET)
+        return new CustomItemBuilder(Material.LEATHER_HELMET, "the_flash_helmet")
                 .setColor(Color.RED)
                 .setName("<red>The Flash's Helmet")
-                .setUnbreakable(true)
-                .setPDCValue(CustomItemKey.key(), PersistentDataType.STRING, "the_flash_helmet")
                 .setLore("<gray>Hit someone while sneaking to teleport",
-                        "<gray>behind them. (5 second cooldown)")
+                        "<gray>behind them. (5s)")
                 .build();
     }
 
@@ -39,37 +38,29 @@ public class TheFlashHelmet implements CustomItem {
         Player attacker = info.attacker();
         Player victim = info.victim();
 
-        if (CooldownManager.getInstance().isOnCooldown(attacker.getUniqueId(), "the_flash_helmet")) {
+        if (CooldownManager.getInstance().isOnCooldown(attacker.getUniqueId(), "the_flash_helmet") ||
+                !attacker.isSneaking()) {
             return;
         }
-
-        if (!attacker.isSneaking()) {
-            return;
-        }
+        CooldownManager.getInstance().startCooldown(attacker.getUniqueId(), "the_flash_helmet", 5000);
 
         Location victimLoc = victim.getLocation();
-        Vector fiveBlocksBehindVictim =  victimLoc.getDirection().multiply(-5).setY(0);
+        Vector behindVictim =  victimLoc.getDirection().multiply(-2).setY(0);
 
-        Bukkit.getScheduler().runTaskLater(CharacterWarPlugin.getInstance(), () -> {
-            BlockIterator blockIterator = new BlockIterator(victimLoc.getWorld(), victimLoc.toVector(), fiveBlocksBehindVictim, 0, 5);
-            while (blockIterator.hasNext()) {
-                if (blockIterator.next().getType() != Material.AIR) {
-                    return;
-                }
-            }
-
-            Particle.DustOptions dustOptions = new Particle.DustOptions(Color.WHITE, 15);
-            attacker.getWorld().spawnParticle(Particle.REDSTONE,
-                    attacker.getLocation(),
-                    5,
-                    dustOptions);
-            attacker.getWorld().spawnParticle(Particle.REDSTONE,
-                    attacker.getEyeLocation(),
-                    5,
-                    dustOptions);
-
-            attacker.teleport(victimLoc.add(fiveBlocksBehindVictim));
-            CooldownManager.getInstance().startCooldown(attacker.getUniqueId(), "the_flash_helmet", 5000);
+        Bukkit.getScheduler().runTaskLaterAsynchronously(CharacterWarPlugin.getInstance(), () -> {
+            this.playEffects(attacker.getLocation());
+            Bukkit.getScheduler().runTaskLater(CharacterWarPlugin.getInstance(),
+                    () -> attacker.teleport(victimLoc.add(behindVictim)), 1);
         }, 1);
     }
+
+    private void playEffects(Location start) {
+        start.getWorld().playSound(start, Sound.ENTITY_ENDERMAN_TELEPORT, 1, 1);
+        Particle.DustOptions dustOptions = new Particle.DustOptions(Color.WHITE, 15);
+        for (int i = 0; i < 10; i++) {
+            start.add(0, 1 / 5.0, 0);
+            start.getWorld().spawnParticle(Particle.REDSTONE, start, 5, dustOptions);
+        }
+    }
+
 }
