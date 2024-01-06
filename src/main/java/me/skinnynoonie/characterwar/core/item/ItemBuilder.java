@@ -48,7 +48,7 @@ public class ItemBuilder {
         if (name == null) {
             return this.editMeta(meta -> meta.displayName(null));
         }
-        Component componentText = this.mm.deserialize(name).decoration(TextDecoration.ITALIC, false);
+        Component componentText = this.mm.deserialize(name);
         return this.editMeta(meta -> meta.displayName(componentText));
     }
 
@@ -58,7 +58,6 @@ public class ItemBuilder {
         }
         List<Component> components = Arrays.stream(strings)
                 .map(this.mm::deserialize)
-                .map(c -> c.decoration(TextDecoration.ITALIC, false))
                 .collect(Collectors.toList());
         return this.editMeta(meta -> meta.lore(components));
     }
