@@ -69,13 +69,13 @@ public class ItemAdapter implements JsonSerializer<ItemStack>, JsonDeserializer<
     }
 
     private List<Component> getPropertyAsComponentList(JsonObject jsonObject) {
-        JsonArray lore = jsonObject.getAsJsonArray("lore");
-        if (lore == null) {
+        JsonElement lore = jsonObject.get("lore");
+        if (lore == JsonNull.INSTANCE) {
             return null;
         }
 
         List<Component> components = new ArrayList<>();
-        for (JsonElement element : lore) {
+        for (JsonElement element : lore.getAsJsonArray()) {
             Component deserializedLore = MiniMessage.miniMessage().deserialize(element.getAsString());
             components.add(deserializedLore);
         }
