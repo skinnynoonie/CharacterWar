@@ -96,6 +96,11 @@
             <version>5.10.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>me.skinnynoonie.noonieconfigs</groupId>
+            <artifactId>noonie-configs</artifactId>
+            <version>0.0.1</version>
+        </dependency>
     </dependencies>
 
 </project>

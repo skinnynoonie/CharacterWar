@@ -1,15 +1,19 @@
 package me.skinnynoonie.characterwar.core;
 
-import me.skinnynoonie.characterwar.core.config.ConfigService;
-import me.skinnynoonie.characterwar.core.config.CustomItemConfig;
-import me.skinnynoonie.characterwar.core.config.file.FileConfigService;
+import me.skinnynoonie.characterwar.core.command.GetCustomItemCommand;
 import me.skinnynoonie.characterwar.core.cooldown.CooldownManager;
 import me.skinnynoonie.characterwar.core.cooldown.manager.DefaultExpiredCooldownManager;
 import me.skinnynoonie.characterwar.core.item.CustomItemManager;
 import me.skinnynoonie.characterwar.core.listener.DamageListener;
+import me.skinnynoonie.characterwar.core.test_items.MyCustomItemConfig;
+import me.skinnynoonie.noonieconfigs.DefaultConfigServices;
+import me.skinnynoonie.noonieconfigs.dao.JsonFileConfigRepository;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
+
+import java.io.IOException;
 
 public final class CharacterWarCorePlugin extends JavaPlugin {
 
@@ -19,42 +23,53 @@ public final class CharacterWarCorePlugin extends JavaPlugin {
         return CharacterWarCorePlugin.plugin;
     }
 
-    private ConfigService<CustomItemConfig> itemConfigService;
-    private CustomItemManager customItemManager;
     private CooldownManager cooldownManager;
+    private CustomItemManager customItemManager;
 
     @Override
     public void onEnable() {
-        this.initiateInstances();
-        this.registerListeners();
+        try {
+            this.initiateInstances();
+            this.registerListeners();
+            this.registerCommands();
+            this.customItemManager.registerCustomItem("my_custom_item", new MyCustomItemConfig(), new MyCustomItemConfig.Listener());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void onDisable() {
     }
 
-    public ConfigService<CustomItemConfig> getItemConfigService() {
-        return this.itemConfigService;
-    }
-
-    public CustomItemManager getCustomItemManager() {
-        return this.customItemManager;
-    }
-
+    @NotNull
     public CooldownManager getCooldownManager() {
         return this.cooldownManager;
     }
 
-    private void initiateInstances() {
+    @NotNull
+    public CustomItemManager getCustomItemManager() {
+        return this.customItemManager;
+    }
+
+    private void initiateInstances() throws IOException {
         CharacterWarCorePlugin.plugin = this;
-        this.itemConfigService = new FileConfigService<>(super.getDataFolder().toPath().resolve("CustomItems"));
-        this.customItemManager = new CustomItemManager(this, this.itemConfigService);
         this.cooldownManager = new DefaultExpiredCooldownManager();
+
+        this.customItemManager = new CustomItemManager(
+                this,
+                DefaultConfigServices.createJsonConfigService(this.getDataFolder().toPath())
+        );
+        this.customItemManager.initialize();
     }
 
     private void registerListeners() {
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new DamageListener(this.customItemManager), this);
+    }
+
+    private void registerCommands() {
+        super.getCommand("giveitem").setExecutor(new GetCustomItemCommand());
     }
 
 }

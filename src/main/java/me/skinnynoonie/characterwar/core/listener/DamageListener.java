@@ -1,5 +1,6 @@
 package me.skinnynoonie.characterwar.core.listener;
 
+import me.skinnynoonie.characterwar.core.CharacterWarCorePlugin;
 import me.skinnynoonie.characterwar.core.eventinfo.DamageEventInfo;
 import me.skinnynoonie.characterwar.core.eventinfo.EventInfo;
 import me.skinnynoonie.characterwar.core.item.CustomItemListener;
@@ -49,7 +50,7 @@ public class DamageListener implements Listener {
             attacker = attackerPlayer;
         } else {
             attacker = this.getShooterFromEvent(event);
-            if (attacker == null) {
+            if (attacker == null) { // The source of the POSSIBLE projectile is not a player.
                 return;
             }
             attackerIsShooter = true;
@@ -74,15 +75,14 @@ public class DamageListener implements Listener {
 
     private void handleReferenceName(ItemStack item, Consumer<CustomItemListener> consumer) {
         String referenceName = ItemUtils.getStringFromPDC(item, this.customItemManager.getReferenceNameKey());
-        if (referenceName == null) {
-            return;
+        if (referenceName != null) {
+            this.customItemManager.getListener(referenceName).ifPresent(consumer);
         }
-        this.customItemManager.getItemListener(referenceName).ifPresent(consumer);
     }
 
     private Player getShooterFromEvent(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Projectile projectile
-                && projectile.getShooter() instanceof Player shooter) {
+        if (event.getDamager() instanceof Projectile projectile &&
+                projectile.getShooter() instanceof Player shooter) {
             return shooter;
         }
         return null;

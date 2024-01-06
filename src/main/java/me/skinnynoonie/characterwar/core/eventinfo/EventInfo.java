@@ -9,7 +9,7 @@ public class EventInfo {
     private final CustomItemManager customItemManager;
 
     public EventInfo(@NotNull CustomItemManager customItemManager) {
-        Preconditions.checkNotNull(customItemManager, "customItemManager is null.");
+        Preconditions.checkNotNull(customItemManager, "Parameter customItemManager is null.");
         this.customItemManager = customItemManager;
     }
 

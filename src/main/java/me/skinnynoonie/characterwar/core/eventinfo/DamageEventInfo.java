@@ -24,17 +24,17 @@ public class DamageEventInfo extends EventInfo {
     }
 
     @NotNull
-    public Player attacker() {
-        return attacker;
+    public Player getAttacker() {
+        return this.attacker;
     }
 
     @NotNull
-    public Player victim() {
-        return victim;
+    public Player getVictim() {
+        return this.victim;
     }
 
     public boolean attackerIsShooter() {
-        return attackerIsShooter;
+        return this.attackerIsShooter;
     }
 
 }

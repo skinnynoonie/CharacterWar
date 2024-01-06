@@ -1,7 +1,5 @@
 package me.skinnynoonie.characterwar.core.util;
 
-import me.skinnynoonie.characterwar.core.config.CustomItemConfig;
-import me.skinnynoonie.characterwar.core.item.ItemBuilder;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -28,15 +26,6 @@ public final class ItemUtils {
 
         PersistentDataContainer pdc = itemMeta.getPersistentDataContainer();
         return pdc.get(namespacedKey, PersistentDataType.STRING);
-    }
-
-    public static ItemStack buildFromConfig(CustomItemConfig config) {
-        return new ItemBuilder(config.getMaterial())
-                .setName(config.getName())
-                .setLore(config.getLore().toArray(String[]::new))
-                .setUnbreakable(config.isUnbreakable())
-                .build();
-
     }
 
     private ItemUtils() {

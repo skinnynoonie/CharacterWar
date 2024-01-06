@@ -27,7 +27,7 @@ public class ItemBuilder {
 
     public ItemBuilder(@NotNull ItemStack itemToBuild) {
         Preconditions.checkNotNull(itemToBuild, "itemToBuild is null.");
-        this.itemToBuild = itemToBuild;
+        this.itemToBuild = itemToBuild.clone();
         this.mm = MiniMessage.miniMessage();
     }
 
